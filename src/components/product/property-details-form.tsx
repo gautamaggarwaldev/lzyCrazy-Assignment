@@ -357,7 +357,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                       </div>
                     ))}
                     
-                    {Array.from({ length: Math.max(0, 5 - details.photos.length -1) }).map((_, index) => (
+                    {Array.from({ length: Math.max(0, 4 - details.photos.length) }).map((_, index) => (
                        <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
                           <Camera className="w-8 h-8 text-muted-foreground/50" />
                        </div>
@@ -442,3 +442,5 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     </div>
   );
 }
+
+    
