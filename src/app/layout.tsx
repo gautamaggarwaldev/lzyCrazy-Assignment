@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/header';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'LzyCrazy - Buy and Sell Anything',
+  title: 'LzyCrazy Assignment',
   description: 'Your local online marketplace.',
 };
 
