@@ -2,7 +2,7 @@ import { getProducts, getCategories } from '@/lib/products';
 import { FilterSidebar } from '@/components/product/filter-sidebar';
 import { ProductGrid } from '@/components/product/product-grid';
 
-export default function HomePage({
+export default async function HomePage({
   searchParams,
 }: {
   searchParams?: {
@@ -10,11 +10,13 @@ export default function HomePage({
     category?: string;
   };
 }) {
-  const products = getProducts({ 
+  // If getProducts or getCategories are async, await them
+  const products = await getProducts({ 
     query: searchParams?.q,
     category: searchParams?.category
   });
-  const categories = getCategories();
+
+  const categories = await getCategories();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">

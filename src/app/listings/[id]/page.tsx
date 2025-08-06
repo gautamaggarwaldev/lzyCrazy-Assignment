@@ -8,11 +8,11 @@ import { Separator } from '@/components/ui/separator';
 import { Mail, MapPin, User } from 'lucide-react';
 import { FavoriteButton } from '@/components/product/favorite-button';
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
-  const product = getProductById(params.id);
+export default async function ListingDetailPage({ params }: { params: { id: string } }) {
+  const product = await getProductById(params.id); // ✅ await the async function
 
   if (!product) {
-    notFound();
+    notFound(); // ✅ only valid inside async component
   }
 
   return (
@@ -55,31 +55,31 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
             <Separator className="my-6" />
             <h3 className="text-xl font-semibold mb-2">Keywords</h3>
             <div className="flex flex-wrap gap-2">
-                {product.keywords.map(keyword => (
-                    <Badge key={keyword} variant="secondary">{keyword}</Badge>
-                ))}
+              {product.keywords.map(keyword => (
+                <Badge key={keyword} variant="secondary">{keyword}</Badge>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="md:col-span-1 space-y-6">
-         <Card>
-            <CardHeader>
-                <CardTitle>Seller Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex items-center">
-                    <User className="w-5 h-5 mr-3 text-muted-foreground" />
-                    <span className="font-medium">{product.seller.name}</span>
-                </div>
-                 <div className="flex items-center">
-                    <Mail className="w-5 h-5 mr-3 text-muted-foreground" />
-                    <a href={`mailto:${product.seller.contact}`} className="text-primary hover:underline">
-                        Contact Seller
-                    </a>
-                </div>
-            </CardContent>
+        <Card>
+          <CardHeader>
+            <CardTitle>Seller Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center">
+              <User className="w-5 h-5 mr-3 text-muted-foreground" />
+              <span className="font-medium">{product.seller.name}</span>
+            </div>
+            <div className="flex items-center">
+              <Mail className="w-5 h-5 mr-3 text-muted-foreground" />
+              <a href={`mailto:${product.seller.contact}`} className="text-primary hover:underline">
+                Contact Seller
+              </a>
+            </div>
+          </CardContent>
         </Card>
         <FavoriteButton productId={product.id} />
       </div>
