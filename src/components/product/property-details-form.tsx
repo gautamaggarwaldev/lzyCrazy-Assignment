@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Camera, GripVertical, User } from 'lucide-react';
+import { ArrowLeft, Camera, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User } from 'lucide-react';
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -74,6 +75,15 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
+    
+    if (id === 'totalFloors' || id === 'floorNo') {
+      const numValue = parseInt(value, 10);
+      if (numValue > 200) {
+        setDetails(prev => ({ ...prev, [id]: '200' }));
+        return;
+      }
+    }
+
     setDetails(prev => ({ ...prev, [id]: value }));
   };
   
