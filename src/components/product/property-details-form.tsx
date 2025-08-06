@@ -1,16 +1,17 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { ArrowLeft, Camera, GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '../ui/badge';
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -49,7 +50,11 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     description: '',
     price: '',
     photos: [] as string[],
+    coverPhotoIndex: 0,
   });
+
+  const draggedItemIndex = useRef<number | null>(null);
+  const draggedOverItemIndex = useRef<number | null>(null);
 
   const handleSelect = (field: keyof typeof details, value: string) => {
     setDetails(prev => ({ ...prev, [field]: value }));
@@ -65,6 +70,37 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
       const newPhotos = files.map(file => URL.createObjectURL(file));
       setDetails(prev => ({ ...prev, photos: [...prev.photos, ...newPhotos].slice(0, 20)}));
     }
+  };
+
+  const setCoverPhoto = (index: number) => {
+    setDetails(prev => ({ ...prev, coverPhotoIndex: index }));
+  };
+
+  const handleDragSort = () => {
+    if (draggedItemIndex.current === null || draggedOverItemIndex.current === null) return;
+    
+    setDetails(prev => {
+        const newPhotos = [...prev.photos];
+        const draggedItem = newPhotos.splice(draggedItemIndex.current!, 1)[0];
+        newPhotos.splice(draggedOverItemIndex.current!, 0, draggedItem);
+
+        let newCoverIndex = prev.coverPhotoIndex;
+        const originalCoverUrl = prev.photos[prev.coverPhotoIndex];
+
+        if (draggedItemIndex.current === prev.coverPhotoIndex) {
+            newCoverIndex = draggedOverItemIndex.current!;
+        } else {
+            const newIndexForOriginalCover = newPhotos.findIndex(p => p === originalCoverUrl);
+            if(newIndexForOriginalCover !== -1) {
+                newCoverIndex = newIndexForOriginalCover;
+            }
+        }
+        
+        draggedItemIndex.current = null;
+        draggedOverItemIndex.current = null;
+
+        return { ...prev, photos: newPhotos, coverPhotoIndex: newCoverIndex };
+    });
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -229,6 +265,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
                 <div className="space-y-3">
                   <h2 className="text-lg font-bold">UPLOAD UP TO 20 PHOTOS</h2>
+                   <p className="text-sm text-muted-foreground">Drag and drop to reorder photos. The first photo is the main cover image.</p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                     <label htmlFor="photo-upload" className="aspect-square border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-muted-foreground cursor-pointer hover:bg-muted">
                         <Camera className="w-8 h-8 mb-2" />
@@ -237,12 +274,35 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                     <input id="photo-upload" type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoUpload} />
                     
                     {details.photos.map((photo, index) => (
-                      <div key={index} className="aspect-square border rounded-lg overflow-hidden relative">
+                      <div 
+                        key={photo} 
+                        className="aspect-square border rounded-lg overflow-hidden relative group cursor-grab"
+                        draggable
+                        onDragStart={() => (draggedItemIndex.current = index)}
+                        onDragEnter={() => (draggedOverItemIndex.current = index)}
+                        onDragEnd={handleDragSort}
+                        onDragOver={(e) => e.preventDefault()}
+                      >
                         <img src={photo} alt={`upload preview ${index}`} className="w-full h-full object-cover" />
+                         <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <GripVertical className="text-white bg-black/30 rounded-full p-1 h-6 w-6" />
+                        </div>
+                        {details.coverPhotoIndex === index ? (
+                            <Badge variant="default" className="absolute bottom-1 left-1">Cover</Badge>
+                        ) : (
+                            <Button 
+                                size="sm" 
+                                variant="secondary"
+                                className="absolute bottom-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => setCoverPhoto(index)}
+                            >
+                                Set Cover
+                            </Button>
+                        )}
                       </div>
                     ))}
                     
-                    {Array.from({ length: 19 - details.photos.length }).map((_, index) => (
+                    {Array.from({ length: Math.max(0, 19 - details.photos.length) }).map((_, index) => (
                        <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
                           <Camera className="w-8 h-8 text-muted-foreground/50" />
                        </div>
@@ -259,5 +319,3 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     </div>
   );
 }
-
-    
