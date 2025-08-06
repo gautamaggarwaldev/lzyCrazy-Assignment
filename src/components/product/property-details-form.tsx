@@ -389,7 +389,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                                 <SelectTrigger id="state">
                                 <SelectValue placeholder="Select State" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="item-aligned">
                                 {states.map(s => (
                                     <SelectItem key={s} value={s}>{s}</SelectItem>
                                 ))}

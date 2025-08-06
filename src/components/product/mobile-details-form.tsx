@@ -232,7 +232,7 @@ export function MobileDetailsForm({ category, subcategory, onSubmit }: MobileDet
                                 <SelectTrigger id="state">
                                 <SelectValue placeholder="Select State" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="item-aligned">
                                 {states.map(s => (
                                     <SelectItem key={s} value={s}>{s}</SelectItem>
                                 ))}

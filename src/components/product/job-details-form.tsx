@@ -145,7 +145,7 @@ export function JobDetailsForm({ category, subcategory, onSubmit }: JobDetailsFo
                                 <SelectTrigger id="state">
                                 <SelectValue placeholder="Select State" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent position="item-aligned">
                                 {states.map(s => (
                                     <SelectItem key={s} value={s}>{s}</SelectItem>
                                 ))}
