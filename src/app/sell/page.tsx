@@ -87,10 +87,16 @@ export default function SellPage() {
         return (
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-8">
-              {selectedCategory && (
+              {selectedCategory ? (
                   <Button variant="ghost" size="icon" onClick={handleBack} className="mr-4">
                     <ArrowLeft />
                   </Button>
+              ) : (
+                <Button variant="ghost" size="icon" asChild className="mr-4">
+                    <Link href="/">
+                        <ArrowLeft />
+                    </Link>
+                </Button>
               )}
               <h1 className="text-2xl font-bold font-headline text-center flex-grow">POST YOUR AD</h1>
             </div>
