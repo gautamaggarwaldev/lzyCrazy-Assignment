@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -18,7 +19,7 @@ const SuggestListingDetailsInputSchema = z.object({
 export type SuggestListingDetailsInput = z.infer<typeof SuggestListingDetailsInputSchema>;
 
 const SuggestListingDetailsOutputSchema = z.object({
-  suggestedCategories: z.array(z.string()).describe('An array of suggested categories for the listing.'),
+  suggestedCategories: z.array(z.string()).describe('An array of suggested categories for the listing. Do not suggest subcategories.'),
   suggestedKeywords: z.array(z.string()).describe('An array of suggested keywords for the listing.'),
 });
 export type SuggestListingDetailsOutput = z.infer<typeof SuggestListingDetailsOutputSchema>;
@@ -31,10 +32,11 @@ const prompt = ai.definePrompt({
   name: 'suggestListingDetailsPrompt',
   input: {schema: SuggestListingDetailsInputSchema},
   output: {schema: SuggestListingDetailsOutputSchema},
-  prompt: `You are an expert at suggesting categories and keywords for product listings.
+  prompt: `You are an expert at suggesting keywords for product listings.
 
-  Given the title and description of a product listing, suggest relevant categories and keywords to improve its discoverability.
-  Return the categories and keywords as arrays of strings.
+  Given the title and description of a product listing, suggest relevant keywords to improve its discoverability.
+  Do not suggest categories, only keywords.
+  Return the keywords as arrays of strings.
 
   Title: {{{title}}}
   Description: {{{description}}}`,
@@ -48,6 +50,10 @@ const suggestListingDetailsFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await prompt(input);
+    // Setting categories to empty array as we don't want to suggest them anymore.
+    if(output) {
+        output.suggestedCategories = [];
+    }
     return output!;
   }
 );

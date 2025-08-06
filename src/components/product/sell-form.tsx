@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm, useWatch } from 'react-hook-form';
@@ -17,7 +18,6 @@ const formSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters long.' }),
   description: z.string().min(20, { message: 'Description must be at least 20 characters long.' }),
   price: z.coerce.number().min(1, { message: 'Price must be at least $1.' }),
-  category: z.string().min(3, { message: 'Category is required.' }),
   keywords: z.string().min(3, { message: 'At least one keyword is required.' }),
   location: z.string().min(2, { message: 'Location is required.' }),
   contact: z.string().email({ message: 'A valid contact email is required.' }),
@@ -25,7 +25,12 @@ const formSchema = z.object({
 
 type SellFormValues = z.infer<typeof formSchema>;
 
-export function SellForm() {
+interface SellFormProps {
+    category: string;
+    subcategory?: string;
+}
+
+export function SellForm({ category, subcategory }: SellFormProps) {
   const { toast } = useToast();
   const [isSuggesting, setIsSuggesting] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<{ categories: string[]; keywords: string[] }>({ categories: [], keywords: [] });
@@ -36,7 +41,6 @@ export function SellForm() {
       title: '',
       description: '',
       price: 0,
-      category: '',
       keywords: '',
       location: '',
       contact: '',
@@ -80,7 +84,12 @@ export function SellForm() {
   }
 
   function onSubmit(values: SellFormValues) {
-    console.log(values);
+    const fullValues = {
+        ...values,
+        category,
+        subcategory,
+    }
+    console.log(fullValues);
     toast({
       title: 'Listing Submitted!',
       description: "Your item is now live (demo). Check the console for data.",
@@ -93,7 +102,7 @@ export function SellForm() {
     <div className="grid md:grid-cols-3 gap-8">
         <Card className="md:col-span-2">
             <CardHeader>
-                <CardTitle>List your item</CardTitle>
+                <CardTitle>Enter item details</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -112,22 +121,15 @@ export function SellForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <FormField control={form.control} name="price" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Price ($)</FormLabel>
-                                    <FormControl><Input type="number" placeholder="e.g., 450" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                             <FormField control={form.control} name="category" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Category</FormLabel>
-                                    <FormControl><Input placeholder="e.g., Furniture" {...field} /></FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )} />
-                        </div>
+                        
+                        <FormField control={form.control} name="price" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Price ($)</FormLabel>
+                                <FormControl><Input type="number" placeholder="e.g., 450" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        
                         <FormField control={form.control} name="keywords" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Keywords</FormLabel>
@@ -176,18 +178,8 @@ export function SellForm() {
                         {isSuggesting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Suggesting...</> : 'Suggest Details'}
                     </Button>
 
-                    {(suggestions.categories.length > 0 || suggestions.keywords.length > 0) && (
+                    {suggestions.keywords.length > 0 && (
                         <div className="mt-6 space-y-4">
-                            <div>
-                                <h4 className="font-semibold text-sm mb-2">Suggested Categories:</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {suggestions.categories.map(cat => (
-                                        <Button key={cat} size="sm" variant="outline" onClick={() => form.setValue('category', cat, { shouldValidate: true })}>
-                                            {cat}
-                                        </Button>
-                                    ))}
-                                </div>
-                            </div>
                              <div>
                                 <h4 className="font-semibold text-sm mb-2">Suggested Keywords:</h4>
                                 <div className="flex flex-wrap gap-2">
