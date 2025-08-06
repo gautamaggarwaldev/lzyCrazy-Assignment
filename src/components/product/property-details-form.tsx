@@ -248,7 +248,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="projectName">Project Name</label>
               <Input id="projectName" value={details.projectName} onChange={(e) => handleChange('projectName', e.target.value)} maxLength={70} />
-               <p className="text-xs text-muted-foreground text-right">{details.projectName.length} / 70</p>
+               <p className="text-xs text-muted-foreground text-right">{details.projectName.length} / 70}</p>
             </div>
 
             <div className="space-y-3">
@@ -314,7 +314,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                       </div>
                     ))}
                     
-                    {Array.from({ length: Math.max(0, 19 - details.photos.length) }).map((_, index) => (
+                    {Array.from({ length: Math.max(0, 20 - details.photos.length) }).map((_, index) => (
                        <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
                           <Camera className="w-8 h-8 text-muted-foreground/50" />
                        </div>
@@ -331,3 +331,5 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     </div>
   );
 }
+
+    
