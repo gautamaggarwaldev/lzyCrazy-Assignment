@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
@@ -47,6 +47,8 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     projectName: '',
     adTitle: '',
     description: '',
+    price: '',
+    photos: [] as string[],
   });
 
   const handleSelect = (field: keyof typeof details, value: string) => {
@@ -55,6 +57,14 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
   const handleChange = (field: keyof typeof details, value: string) => {
     setDetails(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const newPhotos = files.map(file => URL.createObjectURL(file));
+      setDetails(prev => ({ ...prev, photos: [...prev.photos, ...newPhotos].slice(0, 20)}));
+    }
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -206,11 +216,48 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                <p className="text-xs text-muted-foreground">Include condition, features, and reason for selling</p>
                <p className="text-xs text-muted-foreground text-right">{details.description.length} / 4096</p>
             </div>
+            
+            <div className="border-t pt-8 space-y-8">
+                <div className="space-y-3">
+                  <h2 className="text-lg font-bold">SET A PRICE</h2>
+                  <label className="font-semibold text-sm" htmlFor="price">Price *</label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">₹</span>
+                    <Input id="price" type="number" value={details.price} onChange={(e) => handleChange('price', e.target.value)} required className="pl-8" />
+                  </div>
+                </div>
 
-            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description}>Next</Button>
+                <div className="space-y-3">
+                  <h2 className="text-lg font-bold">UPLOAD UP TO 20 PHOTOS</h2>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                    <label htmlFor="photo-upload" className="aspect-square border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-muted-foreground cursor-pointer hover:bg-muted">
+                        <Camera className="w-8 h-8 mb-2" />
+                        <span className="text-sm text-center">Add Photo</span>
+                    </label>
+                    <input id="photo-upload" type="file" multiple accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                    
+                    {details.photos.map((photo, index) => (
+                      <div key={index} className="aspect-square border rounded-lg overflow-hidden relative">
+                        <img src={photo} alt={`upload preview ${index}`} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                    
+                    {Array.from({ length: 19 - details.photos.length }).map((_, index) => (
+                       <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
+                          <Camera className="w-8 h-8 text-muted-foreground/50" />
+                       </div>
+                    ))}
+
+                  </div>
+                </div>
+            </div>
+
+            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description || !details.price}>Next</Button>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+    
