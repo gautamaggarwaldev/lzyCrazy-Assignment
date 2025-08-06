@@ -12,6 +12,8 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -27,7 +29,7 @@ const projectStatusOptions = ['New Launch', 'Ready to Move', 'Under Construction
 const listedByOptions = ['Builder', 'Dealer', 'Owner'];
 const carParkingOptions = ['0', '1', '2', '3', '3+'];
 const facingOptions = ['East', 'West', 'North', 'South', 'North-East', 'North-West', 'South-East', 'South-West'];
-
+const states = [ "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttarakhand", "Uttar Pradesh", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli", "Daman and Diu", "Delhi", "Lakshadweep", "Puducherry"];
 
 export function PropertyDetailsForm({ category, subcategory, onSubmit }: PropertyDetailsFormProps) {
   const router = useRouter();
@@ -51,6 +53,10 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     price: '',
     photos: [] as string[],
     coverPhotoIndex: 0,
+    state: '',
+    name: '',
+    phone: '',
+    profilePhoto: '',
   });
 
   const draggedItemIndex = useRef<number | null>(null);
@@ -60,8 +66,9 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     setDetails(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleChange = (field: keyof typeof details, value: string) => {
-    setDetails(prev => ({ ...prev, [field]: value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setDetails(prev => ({ ...prev, [id]: value }));
   };
   
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +89,13 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
       setDetails(prev => ({ ...prev, photos: [...prev.photos, ...newPhotos].slice(0, 20)}));
     }
   };
+  
+  const handleProfilePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          setDetails(prev => ({...prev, profilePhoto: URL.createObjectURL(file)}));
+      }
+  }
 
   const setCoverPhoto = (index: number) => {
     setDetails(prev => ({ ...prev, coverPhotoIndex: index }));
@@ -199,27 +213,27 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="superBuiltupArea">Super Builtup area sqft *</label>
-              <Input id="superBuiltupArea" value={details.superBuiltupArea} onChange={(e) => handleChange('superBuiltupArea', e.target.value)} required />
+              <Input id="superBuiltupArea" value={details.superBuiltupArea} onChange={handleChange} required />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="carpetArea">Carpet Area sqft *</label>
-              <Input id="carpetArea" value={details.carpetArea} onChange={(e) => handleChange('carpetArea', e.target.value)} required />
+              <Input id="carpetArea" value={details.carpetArea} onChange={handleChange} required />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="maintenance">Maintenance (Monthly)</label>
-              <Input id="maintenance" value={details.maintenance} onChange={(e) => handleChange('maintenance', e.target.value)} />
+              <Input id="maintenance" value={details.maintenance} onChange={handleChange} />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="totalFloors">Total Floors</label>
-              <Input id="totalFloors" value={details.totalFloors} onChange={(e) => handleChange('totalFloors', e.target.value)} />
+              <Input id="totalFloors" value={details.totalFloors} onChange={handleChange} />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="floorNo">Floor No</label>
-              <Input id="floorNo" value={details.floorNo} onChange={(e) => handleChange('floorNo', e.target.value)} />
+              <Input id="floorNo" value={details.floorNo} onChange={handleChange} />
             </div>
             
             <div className="space-y-3">
@@ -247,20 +261,20 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="projectName">Project Name</label>
-              <Input id="projectName" value={details.projectName} onChange={(e) => handleChange('projectName', e.target.value)} maxLength={70} />
+              <Input id="projectName" value={details.projectName} onChange={handleChange} maxLength={70} />
                <p className="text-xs text-muted-foreground text-right">{details.projectName.length} / 70}</p>
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="adTitle">Ad title *</label>
-              <Input id="adTitle" value={details.adTitle} onChange={(e) => handleChange('adTitle', e.target.value)} required maxLength={70} />
+              <Input id="adTitle" value={details.adTitle} onChange={handleChange} required maxLength={70} />
               <p className="text-xs text-muted-foreground">Mention the key features of your item (e.g. brand, model, age, type)</p>
               <p className="text-xs text-muted-foreground text-right">{details.adTitle.length} / 70</p>
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="description">Description *</label>
-              <Textarea id="description" value={details.description} onChange={(e) => handleChange('description', e.target.value)} required maxLength={4096} rows={6} />
+              <Textarea id="description" value={details.description} onChange={handleChange} required maxLength={4096} rows={6} />
                <p className="text-xs text-muted-foreground">Include condition, features, and reason for selling</p>
                <p className="text-xs text-muted-foreground text-right">{details.description.length} / 4096</p>
             </div>
@@ -314,7 +328,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                       </div>
                     ))}
                     
-                    {Array.from({ length: Math.max(0, 20 - details.photos.length) }).map((_, index) => (
+                    {Array.from({ length: Math.max(0, 20 - details.photos.length - 1) }).map((_, index) => (
                        <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
                           <Camera className="w-8 h-8 text-muted-foreground/50" />
                        </div>
@@ -324,12 +338,78 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                 </div>
             </div>
 
-            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description || !details.price}>Next</Button>
+            <div className="border-t pt-8 space-y-8">
+                <h2 className="text-lg font-bold">CONFIRM YOUR LOCATION</h2>
+                <Tabs defaultValue="list" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="list">List</TabsTrigger>
+                        <TabsTrigger value="current">Current Location</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="list">
+                        <div className="space-y-3 pt-4">
+                            <label className="font-semibold text-sm" htmlFor="state">State *</label>
+                            <Select onValueChange={(value) => handleSelect('state', value)} value={details.state}>
+                                <SelectTrigger id="state">
+                                <SelectValue placeholder="Select State" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                {states.map(s => (
+                                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                                ))}
+                                </SelectContent>
+                            </Select>
+                            {/* You might want to add city/locality dropdowns here that populate based on state */}
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="current">
+                        <div className="pt-4 text-center text-muted-foreground">
+                            <p>Using your current location...</p>
+                            {/* Logic to get current location would go here */}
+                        </div>
+                    </TabsContent>
+                </Tabs>
+            </div>
+            
+            <div className="border-t pt-8 space-y-8">
+                 <h2 className="text-lg font-bold">REVIEW YOUR DETAILS</h2>
+                 <div className="flex items-center gap-4">
+                    <div className="relative">
+                        <Avatar className="w-24 h-24">
+                            <AvatarImage src={details.profilePhoto} />
+                            <AvatarFallback>
+                                <User className="w-12 h-12" />
+                            </AvatarFallback>
+                        </Avatar>
+                        <label htmlFor="profile-photo-upload" className="absolute bottom-0 right-0 bg-background rounded-full p-1 border cursor-pointer">
+                            <Camera className="w-4 h-4" />
+                        </label>
+                        <input id="profile-photo-upload" type="file" accept="image/*" className="hidden" onChange={handleProfilePhotoUpload} />
+                    </div>
+                    <div className="space-y-3 w-full">
+                        <label className="font-semibold text-sm" htmlFor="name">Name</label>
+                        <Input id="name" value={details.name} onChange={handleChange} maxLength={30} />
+                        <p className="text-xs text-muted-foreground text-right">{details.name.length} / 30</p>
+                    </div>
+                 </div>
+            </div>
+
+            <div className="border-t pt-8 space-y-8">
+                 <h2 className="text-lg font-bold">Let's verify your account</h2>
+                 <p className="text-sm text-muted-foreground">We will send you a confirmation code by sms on the next step.</p>
+                 <div className="space-y-3">
+                    <label className="font-semibold text-sm" htmlFor="phone">Mobile Phone Number *</label>
+                    <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">+91</span>
+                        <Input id="phone" type="tel" value={details.phone} onChange={handleChange} required className="pl-10" />
+                    </div>
+                </div>
+            </div>
+
+
+            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description || !details.price}>Post now</Button>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
-
-    
