@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { Input } from '../ui/input';
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -19,6 +20,9 @@ const propertyTypes = ['Flats / Apartments', 'Independent / Builder Floors', 'Fa
 const bhkOptions = ['1', '2', '3', '4', '4+'];
 const bathroomOptions = ['1', '2', '3', '4', '4+'];
 const furnishingOptions = ['Furnished', 'Semi-Furnished', 'Unfurnished'];
+const projectStatusOptions = ['New Launch', 'Ready to Move', 'Under Construction'];
+const listedByOptions = ['Builder', 'Dealer', 'Owner'];
+
 
 export function PropertyDetailsForm({ category, subcategory, onSubmit }: PropertyDetailsFormProps) {
   const router = useRouter();
@@ -27,9 +31,20 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     bhk: '',
     bathrooms: '',
     furnishing: '',
+    projectStatus: '',
+    listedBy: '',
+    superBuiltupArea: '',
+    carpetArea: '',
+    maintenance: '',
+    totalFloors: '',
+    floorNo: '',
   });
 
   const handleSelect = (field: keyof typeof details, value: string) => {
+    setDetails(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleChange = (field: keyof typeof details, value: string) => {
     setDetails(prev => ({ ...prev, [field]: value }));
   };
   
@@ -96,8 +111,51 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                 ))}
               </div>
             </div>
+
+             <div className="space-y-3">
+              <label className="font-semibold text-sm">Project Status</label>
+              <div className="flex flex-wrap gap-2">
+                {projectStatusOptions.map(status => (
+                  <Button key={status} type="button" variant={details.projectStatus === status ? 'default' : 'outline'} onClick={() => handleSelect('projectStatus', status)}>{status}</Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm">Listed by</label>
+              <div className="flex flex-wrap gap-2">
+                {listedByOptions.map(l => (
+                  <Button key={l} type="button" variant={details.listedBy === l ? 'default' : 'outline'} onClick={() => handleSelect('listedBy', l)}>{l}</Button>
+                ))}
+              </div>
+            </div>
             
-            <Button type="submit" size="lg" disabled={!details.type}>Next</Button>
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="superBuiltupArea">Super Builtup area sqft *</label>
+              <Input id="superBuiltupArea" value={details.superBuiltupArea} onChange={(e) => handleChange('superBuiltupArea', e.target.value)} required />
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="carpetArea">Carpet Area sqft *</label>
+              <Input id="carpetArea" value={details.carpetArea} onChange={(e) => handleChange('carpetArea', e.target.value)} required />
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="maintenance">Maintenance (Monthly)</label>
+              <Input id="maintenance" value={details.maintenance} onChange={(e) => handleChange('maintenance', e.target.value)} />
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="totalFloors">Total Floors</label>
+              <Input id="totalFloors" value={details.totalFloors} onChange={(e) => handleChange('totalFloors', e.target.value)} />
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="floorNo">Floor No</label>
+              <Input id="floorNo" value={details.floorNo} onChange={(e) => handleChange('floorNo', e.target.value)} />
+            </div>
+            
+            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea}>Next</Button>
           </form>
         </CardContent>
       </Card>
