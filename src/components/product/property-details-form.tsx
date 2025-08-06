@@ -82,15 +82,18 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     const { id, value } = e.target;
     
     if (id === 'totalFloors' || id === 'floorNo') {
-      const numValue = parseInt(value, 10);
+      const sanitizedValue = value.replace(/[^0-9]/g, '');
+      const numValue = parseInt(sanitizedValue, 10);
+      
       if (numValue > 200) {
         setFloorErrors(prev => ({...prev, [id]: 'Maximum 200 floors allowed.'}));
       } else {
         setFloorErrors(prev => ({...prev, [id]: ''}));
       }
+       setDetails(prev => ({ ...prev, [id]: sanitizedValue }));
+    } else {
+       setDetails(prev => ({ ...prev, [id]: value }));
     }
-
-    setDetails(prev => ({ ...prev, [id]: value }));
   };
   
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,13 +255,13 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="totalFloors">Total Floors</label>
-              <Input id="totalFloors" type="number" max="200" value={details.totalFloors} onChange={handleChange} />
+              <Input id="totalFloors" type="text" value={details.totalFloors} onChange={handleChange} />
               {floorErrors.totalFloors && <p className="text-sm text-destructive">{floorErrors.totalFloors}</p>}
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="floorNo">Floor No</label>
-              <Input id="floorNo" type="number" max="200" value={details.floorNo} onChange={handleChange} />
+              <Input id="floorNo" type="text" value={details.floorNo} onChange={handleChange} />
               {floorErrors.floorNo && <p className="text-sm text-destructive">{floorErrors.floorNo}</p>}
             </div>
             
