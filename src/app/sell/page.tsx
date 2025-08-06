@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState } from 'react';
@@ -9,12 +10,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { categories } from '@/lib/categories';
 import { SellForm } from '@/components/product/sell-form';
+import { PropertyDetailsForm } from '@/components/product/property-details-form';
 
 export default function SellPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
   const subcategoryParam = searchParams.get('subcategory');
+  const detailsSubmitted = searchParams.get('details_submitted');
 
   const [selectedCategory, setSelectedCategory] = useState<typeof categories[0] | null>(
     categories.find(c => c.name === categoryParam) || null
@@ -32,27 +35,45 @@ export default function SellPage() {
       router.push(`/sell?category=${encodeURIComponent(selectedCategory.name)}&subcategory=${encodeURIComponent(subcategory)}`);
     }
   };
+  
+  const handlePropertyDetailsSubmit = (details: any) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('details_submitted', 'true');
+    // In a real app, you'd probably want to store these details in state or encoded in the URL
+    console.log("Property Details:", details); 
+    router.push(`/sell?${params.toString()}`);
+  };
 
   const handleBack = () => {
     setSelectedCategory(null);
     router.push('/sell');
   };
+  
+  const isPropertyForSale = categoryParam === 'Properties' && subcategoryParam === 'For Sale: Houses & Apartments';
 
-  if (categoryParam && subcategoryParam) {
-    return (
-      <div>
-        <Button variant="ghost" onClick={() => router.push('/sell')} className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to categories
-        </Button>
-        <h1 className="text-3xl font-bold font-headline mb-2">Sell an Item</h1>
-        <p className="text-muted-foreground mb-8">Posting in: {categoryParam} &gt; {subcategoryParam}</p>
-        <SellForm category={categoryParam} subcategory={subcategoryParam} />
-      </div>
-    );
+  if (isPropertyForSale && !detailsSubmitted) {
+    return <PropertyDetailsForm category={categoryParam!} subcategory={subcategoryParam!} onSubmit={handlePropertyDetailsSubmit} />;
+  }
+
+
+  if (categoryParam && (subcategoryParam || detailsSubmitted)) {
+    const category = categories.find(c => c.name === categoryParam);
+    if (category) {
+       return (
+        <div>
+          <Button variant="ghost" onClick={() => router.push(`/sell?category=${encodeURIComponent(categoryParam)}&subcategory=${encodeURIComponent(subcategoryParam!)}`)} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <h1 className="text-3xl font-bold font-headline mb-2">Sell an Item</h1>
+          <p className="text-muted-foreground mb-8">Posting in: {categoryParam} {subcategoryParam && `> ${subcategoryParam}`}</p>
+          <SellForm category={categoryParam} subcategory={subcategoryParam || undefined} />
+        </div>
+      );
+    }
   }
   
-  if (categoryParam && !subcategoryParam) {
+   if (categoryParam && !subcategoryParam) {
      const category = categories.find(c => c.name === categoryParam);
      if(category && (!category.subcategories || category.subcategories.length === 0)) {
         return (
