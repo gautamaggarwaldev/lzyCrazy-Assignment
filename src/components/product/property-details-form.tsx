@@ -96,14 +96,14 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     }
   };
   
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormattedNumberChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof typeof details) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, '');
     if (rawValue) {
         const numberValue = parseInt(rawValue, 10);
         const formattedValue = numberValue.toLocaleString('en-IN');
-        setDetails(prev => ({ ...prev, price: formattedValue }));
+        setDetails(prev => ({ ...prev, [field]: formattedValue }));
     } else {
-        setDetails(prev => ({ ...prev, price: '' }));
+        setDetails(prev => ({ ...prev, [field]: '' }));
     }
   };
 
@@ -156,7 +156,15 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const unformattedPrice = details.price.replace(/,/g, '');
-    onSubmit({...details, price: unformattedPrice });
+    const unformattedSuperBuiltupArea = details.superBuiltupArea.replace(/,/g, '');
+    const unformattedCarpetArea = details.carpetArea.replace(/,/g, '');
+    const unformattedMaintenance = details.maintenance.replace(/,/g, '');
+    onSubmit({...details, 
+        price: unformattedPrice,
+        superBuiltupArea: unformattedSuperBuiltupArea,
+        carpetArea: unformattedCarpetArea,
+        maintenance: unformattedMaintenance,
+    });
   };
   
   if (!isClient) {
@@ -240,17 +248,17 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="superBuiltupArea">Super Builtup area sqft *</label>
-              <Input id="superBuiltupArea" value={details.superBuiltupArea} onChange={handleChange} required />
+              <Input id="superBuiltupArea" value={details.superBuiltupArea} onChange={(e) => handleFormattedNumberChange(e, 'superBuiltupArea')} required />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="carpetArea">Carpet Area sqft *</label>
-              <Input id="carpetArea" value={details.carpetArea} onChange={handleChange} required />
+              <Input id="carpetArea" value={details.carpetArea} onChange={(e) => handleFormattedNumberChange(e, 'carpetArea')} required />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="maintenance">Maintenance (Monthly)</label>
-              <Input id="maintenance" value={details.maintenance} onChange={handleChange} />
+              <Input id="maintenance" value={details.maintenance} onChange={(e) => handleFormattedNumberChange(e, 'maintenance')} />
             </div>
 
             <div className="space-y-3">
@@ -314,7 +322,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                   <label className="font-semibold text-sm" htmlFor="price">Price *</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">INR</span>
-                    <Input id="price" type="text" value={details.price} onChange={handlePriceChange} required className="pl-12" />
+                    <Input id="price" type="text" value={details.price} onChange={(e) => handleFormattedNumberChange(e, 'price')} required className="pl-12" />
                   </div>
                 </div>
 
@@ -357,8 +365,8 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                       </div>
                     ))}
                     
-                    {details.photos.length < 5 && Array.from({ length: 4 - details.photos.length }).map((_, index) => (
-                       <div key={index} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
+                    {Array.from({ length: Math.max(0, 4 - details.photos.length) }).map((_, index) => (
+                       <div key={`placeholder-${index}`} className="aspect-square border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50">
                           <Camera className="w-8 h-8 text-muted-foreground/50" />
                        </div>
                     ))}
@@ -442,5 +450,3 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     </div>
   );
 }
-
-    
