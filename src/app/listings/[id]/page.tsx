@@ -42,7 +42,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           </CardHeader>
           <CardContent className="p-6">
             <CardTitle className="text-3xl font-headline mb-4">{product.title}</CardTitle>
-            <p className="text-3xl font-bold text-accent mb-4">₹{product.price.toLocaleString('en-IN')}</p>
+            <p className="text-3xl font-bold text-accent mb-4">INR {product.price.toLocaleString('en-IN')}</p>
             <div className="flex items-center text-muted-foreground text-sm mb-4">
               <MapPin className="w-4 h-4 mr-2" />
               {product.location}

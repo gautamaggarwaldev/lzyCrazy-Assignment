@@ -17,7 +17,7 @@ import React from 'react';
 const formSchema = z.object({
   title: z.string().min(5, { message: 'Title must be at least 5 characters long.' }),
   description: z.string().min(20, { message: 'Description must be at least 20 characters long.' }),
-  price: z.coerce.number().min(1, { message: 'Price must be at least ₹1.' }),
+  price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
   keywords: z.string().min(3, { message: 'At least one keyword is required.' }),
   location: z.string().min(2, { message: 'Location is required.' }),
   contact: z.string().email({ message: 'A valid contact email is required.' }),
@@ -124,7 +124,7 @@ export function SellForm({ category, subcategory }: SellFormProps) {
                         
                         <FormField control={form.control} name="price" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Price (₹)</FormLabel>
+                                <FormLabel>Price (INR)</FormLabel>
                                 <FormControl><Input type="number" placeholder="e.g., 35000" {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>

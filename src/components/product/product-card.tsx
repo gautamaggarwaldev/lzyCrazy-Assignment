@@ -59,7 +59,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.title}
           </CardTitle>
           <div className="flex-grow" />
-          <p className="text-xl font-bold text-accent">₹{product.price.toLocaleString('en-IN')}</p>
+          <p className="text-xl font-bold text-accent">INR {product.price.toLocaleString('en-IN')}</p>
         </div>
         <CardFooter className="p-4 pt-0">
           <div className="flex items-center text-sm text-muted-foreground w-full">

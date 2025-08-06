@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -58,6 +58,12 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     phone: '',
     profilePhoto: '',
   });
+  
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const draggedItemIndex = useRef<number | null>(null);
   const draggedOverItemIndex = useRef<number | null>(null);
@@ -133,6 +139,10 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     const unformattedPrice = details.price.replace(/,/g, '');
     onSubmit({...details, price: unformattedPrice });
   };
+  
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -269,14 +279,14 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
               <label className="font-semibold text-sm" htmlFor="adTitle">Ad title *</label>
               <Input id="adTitle" value={details.adTitle} onChange={handleChange} required maxLength={70} />
               <p className="text-xs text-muted-foreground">Mention the key features of your item (e.g. brand, model, age, type)</p>
-              <p className="text-xs text-muted-foreground text-right">{details.adTitle.length} / 70</p>
+              <p className="text-xs text-muted-foreground text-right">{details.adTitle.length} / 70}</p>
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="description">Description *</label>
               <Textarea id="description" value={details.description} onChange={handleChange} required maxLength={4096} rows={6} />
                <p className="text-xs text-muted-foreground">Include condition, features, and reason for selling</p>
-               <p className="text-xs text-muted-foreground text-right">{details.description.length} / 4096</p>
+               <p className="text-xs text-muted-foreground text-right">{details.description.length} / 4096}</p>
             </div>
             
             <div className="border-t pt-8 space-y-8">
@@ -284,8 +294,8 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                   <h2 className="text-lg font-bold">SET A PRICE</h2>
                   <label className="font-semibold text-sm" htmlFor="price">Price *</label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">₹</span>
-                    <Input id="price" type="text" value={details.price} onChange={handlePriceChange} required className="pl-8" />
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">INR</span>
+                    <Input id="price" type="text" value={details.price} onChange={handlePriceChange} required className="pl-12" />
                   </div>
                 </div>
 
@@ -388,7 +398,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                     <div className="space-y-3 w-full">
                         <label className="font-semibold text-sm" htmlFor="name">Name</label>
                         <Input id="name" value={details.name} onChange={handleChange} maxLength={30} />
-                        <p className="text-xs text-muted-foreground text-right">{details.name.length} / 30</p>
+                        <p className="text-xs text-muted-foreground text-right">{details.name.length} / 30}</p>
                     </div>
                  </div>
             </div>
