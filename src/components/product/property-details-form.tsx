@@ -236,12 +236,12 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="totalFloors">Total Floors</label>
-              <Input id="totalFloors" value={details.totalFloors} onChange={handleChange} />
+              <Input id="totalFloors" type="number" max="200" value={details.totalFloors} onChange={handleChange} />
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="floorNo">Floor No</label>
-              <Input id="floorNo" value={details.floorNo} onChange={handleChange} />
+              <Input id="floorNo" type="number" max="200" value={details.floorNo} onChange={handleChange} />
             </div>
             
             <div className="space-y-3">
