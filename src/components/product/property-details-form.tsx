@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Camera, GripVertical } from 'lucide-react';
+import { ArrowLeft, Camera, GripVertical, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
