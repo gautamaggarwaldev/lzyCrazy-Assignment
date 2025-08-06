@@ -63,6 +63,17 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
   const handleChange = (field: keyof typeof details, value: string) => {
     setDetails(prev => ({ ...prev, [field]: value }));
   };
+  
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^0-9]/g, '');
+    if (rawValue) {
+        const numberValue = parseInt(rawValue, 10);
+        const formattedValue = numberValue.toLocaleString('en-IN');
+        setDetails(prev => ({ ...prev, price: formattedValue }));
+    } else {
+        setDetails(prev => ({ ...prev, price: '' }));
+    }
+  };
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -105,7 +116,8 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(details);
+    const unformattedPrice = details.price.replace(/,/g, '');
+    onSubmit({...details, price: unformattedPrice });
   };
 
   return (
@@ -259,7 +271,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
                   <label className="font-semibold text-sm" htmlFor="price">Price *</label>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">₹</span>
-                    <Input id="price" type="number" value={details.price} onChange={(e) => handleChange('price', e.target.value)} required className="pl-8" />
+                    <Input id="price" type="text" value={details.price} onChange={handlePriceChange} required className="pl-8" />
                   </div>
                 </div>
 
