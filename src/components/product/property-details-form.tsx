@@ -9,6 +9,8 @@ import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -22,6 +24,8 @@ const bathroomOptions = ['1', '2', '3', '4', '4+'];
 const furnishingOptions = ['Furnished', 'Semi-Furnished', 'Unfurnished'];
 const projectStatusOptions = ['New Launch', 'Ready to Move', 'Under Construction'];
 const listedByOptions = ['Builder', 'Dealer', 'Owner'];
+const carParkingOptions = ['0', '1', '2', '3', '3+'];
+const facingOptions = ['East', 'West', 'North', 'South', 'North-East', 'North-West', 'South-East', 'South-West'];
 
 
 export function PropertyDetailsForm({ category, subcategory, onSubmit }: PropertyDetailsFormProps) {
@@ -38,6 +42,11 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     maintenance: '',
     totalFloors: '',
     floorNo: '',
+    carParking: '',
+    facing: '',
+    projectName: '',
+    adTitle: '',
+    description: '',
   });
 
   const handleSelect = (field: keyof typeof details, value: string) => {
@@ -155,7 +164,50 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
               <Input id="floorNo" value={details.floorNo} onChange={(e) => handleChange('floorNo', e.target.value)} />
             </div>
             
-            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea}>Next</Button>
+            <div className="space-y-3">
+              <label className="font-semibold text-sm">Car Parking</label>
+              <div className="flex flex-wrap gap-2">
+                {carParkingOptions.map(c => (
+                  <Button key={c} type="button" variant={details.carParking === c ? 'default' : 'outline'} onClick={() => handleSelect('carParking', c)}>{c}</Button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="facing">Facing</label>
+               <Select onValueChange={(value) => handleSelect('facing', value)} value={details.facing}>
+                <SelectTrigger id="facing">
+                  <SelectValue placeholder="Select Facing" />
+                </SelectTrigger>
+                <SelectContent>
+                  {facingOptions.map(f => (
+                    <SelectItem key={f} value={f}>{f}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="projectName">Project Name</label>
+              <Input id="projectName" value={details.projectName} onChange={(e) => handleChange('projectName', e.target.value)} maxLength={70} />
+               <p className="text-xs text-muted-foreground text-right">{details.projectName.length} / 70</p>
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="adTitle">Ad title *</label>
+              <Input id="adTitle" value={details.adTitle} onChange={(e) => handleChange('adTitle', e.target.value)} required maxLength={70} />
+              <p className="text-xs text-muted-foreground">Mention the key features of your item (e.g. brand, model, age, type)</p>
+              <p className="text-xs text-muted-foreground text-right">{details.adTitle.length} / 70</p>
+            </div>
+
+            <div className="space-y-3">
+              <label className="font-semibold text-sm" htmlFor="description">Description *</label>
+              <Textarea id="description" value={details.description} onChange={(e) => handleChange('description', e.target.value)} required maxLength={4096} rows={6} />
+               <p className="text-xs text-muted-foreground">Include condition, features, and reason for selling</p>
+               <p className="text-xs text-muted-foreground text-right">{details.description.length} / 4096</p>
+            </div>
+
+            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description}>Next</Button>
           </form>
         </CardContent>
       </Card>
