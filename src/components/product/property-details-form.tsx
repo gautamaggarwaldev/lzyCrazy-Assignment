@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Camera, GripVertical } from 'lucide-react';
+import { ArrowLeft, Camera, GripVertical, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../ui/input';
@@ -13,8 +13,7 @@ import { Textarea } from '../ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface PropertyDetailsFormProps {
   category: string;
@@ -147,14 +146,12 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
 
   return (
     <div className="max-w-3xl mx-auto">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-        </Button>
-
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold font-headline">POST YOUR AD</h1>
-      </div>
+        <div className="flex items-center mb-8">
+            <Button variant="ghost" size="icon" onClick={() => router.back()} className="mr-4">
+                <ArrowLeft />
+            </Button>
+            <h1 className="text-2xl font-bold font-headline text-center flex-grow">POST YOUR AD</h1>
+        </div>
 
       <Card>
         <CardContent className="p-6">
