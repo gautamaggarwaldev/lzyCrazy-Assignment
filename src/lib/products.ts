@@ -10,7 +10,7 @@ export const products: Product[] = [
     imageHints: ['leather sofa', 'living room', 'vintage furniture'],
     category: 'Furniture',
     location: 'Mumbai, MH',
-    seller: { name: 'Jane Doe', contact: 'jane.d@example.com' },
+    seller: { name: 'Priya Sharma', contact: 'priya.s@example.com' },
     keywords: ['sofa', 'leather', 'vintage', 'furniture', 'living room'],
   },
   {
@@ -22,7 +22,7 @@ export const products: Product[] = [
     imageHints: ['mountain bike', 'bicycle outdoor'],
     category: 'Bikes',
     location: 'Bengaluru, KA',
-    seller: { name: 'John Smith', contact: 'jsmith@example.com' },
+    seller: { name: 'Arjun Gupta', contact: 'arjun.g@example.com' },
     keywords: ['bike', 'mountain bike', 'cycling', 'sports', 'outdoors'],
   },
   {
@@ -34,7 +34,7 @@ export const products: Product[] = [
     imageHints: ['acoustic guitar'],
     category: 'Musical Instruments',
     location: 'Pune, MH',
-    seller: { name: 'Emily White', contact: 'em.white@example.com' },
+    seller: { name: 'Ananya Reddy', contact: 'ananya.r@example.com' },
     keywords: ['guitar', 'acoustic', 'yamaha', 'instrument', 'music'],
   },
   {
@@ -46,7 +46,7 @@ export const products: Product[] = [
     imageHints: ['dslr camera', 'camera lens'],
     category: 'Electronics',
     location: 'Delhi, DL',
-    seller: { name: 'Michael Brown', contact: 'm.brown@example.com' },
+    seller: { name: 'Vikram Singh', contact: 'vikram.s@example.com' },
     keywords: ['camera', 'dslr', 'canon', 'photography', 'electronics'],
   },
   {
@@ -58,7 +58,7 @@ export const products: Product[] = [
     imageHints: ['wood dresser'],
     category: 'Furniture',
     location: 'Chennai, TN',
-    seller: { name: 'Sarah Green', contact: 'sgreen@example.com' },
+    seller: { name: 'Sneha Patel', contact: 'sneha.p@example.com' },
     keywords: ['dresser', 'mid-century', 'wood', 'furniture', 'bedroom'],
   },
   {
@@ -70,7 +70,7 @@ export const products: Product[] = [
     imageHints: ['books collection'],
     category: 'Books',
     location: 'Kolkata, WB',
-    seller: { name: 'David Black', contact: 'dblack@example.com' },
+    seller: { name: 'Rohan Mehta', contact: 'rohan.m@example.com' },
     keywords: ['books', 'harry potter', 'reading', 'collection', 'fantasy'],
   },
   {
@@ -82,7 +82,7 @@ export const products: Product[] = [
     imageHints: ['smartphone', 'iphone screen'],
     category: 'Electronics',
     location: 'Hyderabad, TS',
-    seller: { name: 'Jessica Blue', contact: 'j.blue@example.com' },
+    seller: { name: 'Isha Khan', contact: 'isha.k@example.com' },
     keywords: ['iphone', 'apple', 'smartphone', 'electronics', 'unlocked'],
   },
   {
@@ -94,7 +94,7 @@ export const products: Product[] = [
     imageHints: ['road bike'],
     category: 'Bikes',
     location: 'Ahmedabad, GJ',
-    seller: { name: 'Chris Red', contact: 'c.red@example.com' },
+    seller: { name: 'Aditya Rao', contact: 'aditya.r@example.com' },
     keywords: ['bike', 'road bike', 'schwinn', 'vintage', 'cycling'],
   },
 ];
