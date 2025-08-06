@@ -60,6 +60,11 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     profilePhoto: '',
   });
   
+  const [floorErrors, setFloorErrors] = useState({
+    totalFloors: '',
+    floorNo: '',
+  });
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -79,8 +84,9 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
     if (id === 'totalFloors' || id === 'floorNo') {
       const numValue = parseInt(value, 10);
       if (numValue > 200) {
-        setDetails(prev => ({ ...prev, [id]: '200' }));
-        return;
+        setFloorErrors(prev => ({...prev, [id]: 'Maximum 200 floors allowed.'}));
+      } else {
+        setFloorErrors(prev => ({...prev, [id]: ''}));
       }
     }
 
@@ -247,11 +253,13 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="totalFloors">Total Floors</label>
               <Input id="totalFloors" type="number" max="200" value={details.totalFloors} onChange={handleChange} />
+              {floorErrors.totalFloors && <p className="text-sm text-destructive">{floorErrors.totalFloors}</p>}
             </div>
 
             <div className="space-y-3">
               <label className="font-semibold text-sm" htmlFor="floorNo">Floor No</label>
               <Input id="floorNo" type="number" max="200" value={details.floorNo} onChange={handleChange} />
+              {floorErrors.floorNo && <p className="text-sm text-destructive">{floorErrors.floorNo}</p>}
             </div>
             
             <div className="space-y-3">
@@ -424,7 +432,7 @@ export function PropertyDetailsForm({ category, subcategory, onSubmit }: Propert
             </div>
 
 
-            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description || !details.price}>Post now</Button>
+            <Button type="submit" size="lg" disabled={!details.type || !details.superBuiltupArea || !details.carpetArea || !details.adTitle || !details.description || !details.price || !!floorErrors.totalFloors || !!floorErrors.floorNo}>Post now</Button>
           </form>
         </CardContent>
       </Card>
