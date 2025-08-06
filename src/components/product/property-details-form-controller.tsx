@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PropertyDetailsForm } from '@/components/product/property-details-form';
 import { categories } from '@/lib/categories';
+import { CarDetailsForm } from './car-details-form';
+import { MobileDetailsForm } from './mobile-details-form';
+import { JobDetailsForm } from './job-details-form';
 
 interface PropertyDetailsFormControllerProps {
   categoryParam: string | null;
@@ -39,9 +42,24 @@ export function PropertyDetailsFormController({
   }
   
   const isPropertyForSale = categoryParam === 'Properties' && subcategoryParam === 'For Sale: Houses & Apartments';
+  const isCar = categoryParam === 'Cars';
+  const isMobile = categoryParam === 'Mobiles';
+  const isJob = categoryParam === 'Jobs';
 
   if (isPropertyForSale && !detailsSubmitted) {
     return <PropertyDetailsForm category={categoryParam!} subcategory={subcategoryParam!} onSubmit={onPropertyDetailsSubmit} />;
+  }
+
+  if (isCar && !detailsSubmitted) {
+    return <CarDetailsForm category={categoryParam!} subcategory={subcategoryParam} onSubmit={onPropertyDetailsSubmit} />;
+  }
+
+  if (isMobile && !detailsSubmitted) {
+    return <MobileDetailsForm category={categoryParam!} subcategory={subcategoryParam} onSubmit={onPropertyDetailsSubmit} />;
+  }
+
+  if (isJob && !detailsSubmitted) {
+    return <JobDetailsForm category={categoryParam!} subcategory={subcategoryParam} onSubmit={onPropertyDetailsSubmit} />;
   }
 
   const category = categories.find(c => c.name === categoryParam);
